@@ -2,8 +2,8 @@
 ## Table of Contents
 
 * [About](#About)
-* [Project Description](#Project%20Description)
-* [User Expereince](#User%20Expereince)
+* [Project Description](#Project-Description)
+* [User Expereince](#User-Expereince)
 
 <br/>
 <br/>
