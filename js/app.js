@@ -51,9 +51,7 @@ function updateNavBarScroll() {
     //check how many li elements visible in the navbar
     const VISIBLE_ITEMS = Math.floor(NAVBAR_MENU.getBoundingClientRect().width / SAMPLE_WIDTH);
     const ACTIVE_SECTION_INDEX = activeSectionIndex;
-    console.log(SAMPLE_WIDTH)
-    console.log(ACTIVE_SECTION_INDEX, VISIBLE_ITEMS)
-    console.log(Math.floor(ACTIVE_SECTION_INDEX / VISIBLE_ITEMS))
+
     const SCROLL_AMOUNT = (Math.floor(ACTIVE_SECTION_INDEX / (VISIBLE_ITEMS - 1)) * (SAMPLE_HEIGHT + 3.2)); // this 3.2 is refereing to the border width for both top and bottom 1.6 each
     NAVBAR_MENU.scroll(0, SCROLL_AMOUNT);
 
@@ -121,11 +119,14 @@ function buildTheNav() {// <= in here im just building the navList by iterating 
 
 function setActiveSection() {// <= in here im just removing the active class from the old active section and adding it to the new active section using toggle
     updateNavBarScroll()
-    SECTIONS[activeSectionIndex].classList.toggle('your-active-class');
-    generatedListItem[activeSectionIndex].classList.toggle('active__link')
-    activeSectionIndex = findActiveSection(activeSectionIndex);
-    SECTIONS[activeSectionIndex].classList.toggle('your-active-class');
-    generatedListItem[activeSectionIndex].classList.toggle('active__link')
+    let newActiveSectionIndex = findActiveSection(activeSectionIndex)
+    if (activeSectionIndex != newActiveSectionIndex) {
+        SECTIONS[activeSectionIndex].classList.toggle('your-active-class');
+        generatedListItem[activeSectionIndex].classList.toggle('active__link')
+        activeSectionIndex = newActiveSectionIndex;
+        SECTIONS[activeSectionIndex].classList.toggle('your-active-class');
+        generatedListItem[activeSectionIndex].classList.toggle('active__link')
+    }
 
 }
 

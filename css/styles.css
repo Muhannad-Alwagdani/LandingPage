@@ -78,9 +78,18 @@ section {
 .navbar__menu_clicked{
     max-height: none;
 }
+/*  Custom navbar classes */
+.active__link{
+    border-radius: 5px;
+    background-color: red;
+    border-radius: 1em;
+    transition: ease 3s all;
+}
 .hidden {
     display: none;
+    transition: ease 3s all;
 }
+/*  End of custom classed  */
 .navbar__menu ul {
     color: black;
     padding-left: 0;
@@ -102,12 +111,13 @@ section {
     color: #000;
 }
 
-.navbar__menu .menu__link:hover {
+/*  i liked this effect :[  */
+/* .navbar__menu .menu__link:hover {
     background: #333;
     color: #fff;
     border-radius: 1em;
     transition: ease 0.5s all;
-}
+} */
 
 /* Header Styles */
 .page__header {
@@ -249,7 +259,3 @@ section.your-active-class .landing__container::after {
 	}
 }
 
-.active__link{
-    border-radius: 5px;
-    background-color: red;
-}
