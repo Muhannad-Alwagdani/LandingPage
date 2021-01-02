@@ -71,11 +71,21 @@ section {
 /* ---- Module Rules ---- */
 
 /* Navigation Styles*/
+.navbar__menu {
+    max-height: 3em;
+    overflow: hidden;
+}
+.navbar__menu_clicked{
+    max-height: none;
+}
+.hidden {
+    display: none;
+}
 .navbar__menu ul {
     color: black;
     padding-left: 0;
     margin: 0;
-    text-align: right;
+    text-align: center;
 }
 
 .navbar__menu li {
@@ -237,4 +247,9 @@ section.your-active-class .landing__container::after {
 		           translate(-1em) 
                    rotate(-360deg);
 	}
+}
+
+.active__link{
+    border-radius: 5px;
+    background-color: red;
 }

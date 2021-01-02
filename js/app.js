@@ -17,13 +17,14 @@
  * Define Global Variables
  * 
 */
-
+const NAVBAR_MENU = document.querySelector('.navbar__menu');// get the navbar menu reference
 const SECTIONS = document.querySelectorAll('section'); //get all SECTIONS in the HTML
 const NAVBAR_LIST = document.querySelector('#navbar__list'); //get the target navbar list
+const DISTANCE_FROM_TOP = 10; //<= this variable is the distance between a section and the top of the window, this variable is here to have more control on when to have an active state
+let generatedListItem = [];
 let activeSectionIndex = 0; // <= the fisrt SECTIONS is set to active by default
 let sectionHeight = SECTIONS[0].getBoundingClientRect().height; //<= Assuming all SECTIONS have the same height, then i am going to use this for mathmatical calculations
-const DISTANCE_FROM_TOP = 10; //<= this variable is the distance between a section and the top of the window, this variable is here to have more control on when to have an active state
-
+let navTimeout;
 /**
  * End Global Variables
  * Start Helper Functions
@@ -41,6 +42,48 @@ function findActiveSection(oldIndex) {
     return oldIndex;// <= if both of the above conditions did not pass, then we return the old index (no update)
 
 }
+function updateNavBarScroll() {
+
+    const NAVBAR_LIST_ITEM_SAMPLE = document.querySelector('li');
+    const SAMPLE_BOUNDING_BOX = NAVBAR_LIST_ITEM_SAMPLE.getBoundingClientRect();
+    const SAMPLE_HEIGHT = SAMPLE_BOUNDING_BOX.height;
+    const SAMPLE_WIDTH = SAMPLE_BOUNDING_BOX.width;
+    //check how many li elements visible in the navbar
+    const VISIBLE_ITEMS = Math.floor(NAVBAR_MENU.getBoundingClientRect().width / SAMPLE_WIDTH);
+    const ACTIVE_SECTION_INDEX = activeSectionIndex;
+    console.log(SAMPLE_WIDTH)
+    console.log(ACTIVE_SECTION_INDEX, VISIBLE_ITEMS)
+    console.log(Math.floor(ACTIVE_SECTION_INDEX / VISIBLE_ITEMS))
+    const SCROLL_AMOUNT = (Math.floor(ACTIVE_SECTION_INDEX / (VISIBLE_ITEMS - 1)) * (SAMPLE_HEIGHT + 3.2)); // this 3.2 is refereing to the border width for both top and bottom 1.6 each
+    NAVBAR_MENU.scroll(0, SCROLL_AMOUNT);
+
+
+}
+
+function displayNav() {
+
+    clearTimeout(navTimeout)
+    NAVBAR_MENU.classList.remove('hidden')
+    navTimeout = setTimeout(() => {
+        NAVBAR_MENU.classList.add('hidden')
+        NAVBAR_MENU.classList.remove('navbar__menu_clicked')
+    }, 5000)
+
+}
+function mouseOverNav() {
+    displayNav()
+}
+function updateValuesOnScroll() {
+
+    setActiveSection()
+    displayNav()
+
+}
+function updateValuesOnResize() {
+
+    sectionHeight = SECTIONS[0].getBoundingClientRect().height
+    updateNavBarScroll();
+}
 
 
 /**
@@ -54,14 +97,18 @@ function buildTheNav() {// <= in here im just building the navList by iterating 
 
     const navFragmet = document.createDocumentFragment();// <= creating fragment for a bit of performance measures 
 
-    SECTIONS.forEach(section => {
+    SECTIONS.forEach((section, index) => {
 
         const newNavListItem = document.createElement('li');
 
         newNavListItem.classList.add('menu__link')
         newNavListItem.innerText = section.dataset.nav;
+        if (index == 0) {
+            newNavListItem.classList.add('active__link')
+        }
 
         navFragmet.appendChild(newNavListItem); // <= appending the new li element to the fragment
+        generatedListItem.push(newNavListItem);
 
     });
 
@@ -73,9 +120,12 @@ function buildTheNav() {// <= in here im just building the navList by iterating 
 // Add class 'active' to section when near top of viewport
 
 function setActiveSection() {// <= in here im just removing the active class from the old active section and adding it to the new active section using toggle
+    updateNavBarScroll()
     SECTIONS[activeSectionIndex].classList.toggle('your-active-class');
+    generatedListItem[activeSectionIndex].classList.toggle('active__link')
     activeSectionIndex = findActiveSection(activeSectionIndex);
     SECTIONS[activeSectionIndex].classList.toggle('your-active-class');
+    generatedListItem[activeSectionIndex].classList.toggle('active__link')
 
 }
 
@@ -96,6 +146,9 @@ function scrollToSection(e) {//in here i want to do a bit of explaining
             top: window.scrollY + y,
             behavior: 'smooth'
         });
+    } else {
+        //Expand Navbar on click event
+        NAVBAR_MENU.classList.toggle('navbar__menu_clicked')
     }
 }
 
@@ -111,13 +164,14 @@ buildTheNav();
 
 // Scroll to section on link click
 NAVBAR_LIST.addEventListener('click', (e) => scrollToSection(e));
+NAVBAR_MENU.addEventListener('mousemove', mouseOverNav)
 
 
 // Set SECTIONS as active
-window.addEventListener('scroll', setActiveSection);//Listen for scrolls and update active section
+window.addEventListener('scroll', updateValuesOnScroll);//Listen for scrolls and update active section
 
 //this event listener is for updating the height of the section, to prevent array out of bound error
-window.addEventListener('resize', () => sectionHeight = SECTIONS[0].getBoundingClientRect().height);
+window.addEventListener('resize', () => updateValuesOnResize());
 
 
 
